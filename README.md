@@ -1,3 +1,5 @@
+![Estágio Atual](/dosc/atual.png)
+
 ### Links provider
 - [VPC](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc)
 - [Subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet)

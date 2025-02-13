@@ -1,6 +1,7 @@
 ### Objetivos
 - Prática de IAC com Terraform e Cloud AWS.
-- Prover RemoteState, StateLock.
+    - Terraform deve ser modular
+- Deve prover RemoteState e StateLock.
 - Usar pipeline para deployar infra.
 - Prover um ambiente base para laboratórios kubernetes.
 - O laboratório deve estar documentado e ser replicável
@@ -8,7 +9,7 @@
 
 
 
-![Estágio Atual](/docs/atual.png)
+![Estágio Atual](/docs/arq-diag.png)
 
 ## Security Groups
 - Egress full allow 0.0.0.0/0
@@ -16,14 +17,20 @@
 - Ingress 80/443 full allow 0.0.0.0/0
 ### SG-01
 - Ingress 22 MyIp 
+- Ingress 5432 from SG-03
 ### SG-02
 - Ingress 22 from SG-01
-- Ingress 5432 from SG-01
+- Ingress 5432 from SG-03ws
+- Ingress 80/443 from SG-0
 ### SG-03
 - Ingress 5432 from SG-02
 - Ingress 5432 from SG-01
 
 
+
+### Documentação
+
+- [Instâncias RDS ](https://aws.amazon.com/pt/rds/instance-types/)
 
 ### Links provider
 - [VPC](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc)
@@ -38,3 +45,6 @@
 
 - [Roles IAM para EKS](https://docs.aws.amazon.com/eks/latest/userguide/cluster-iam-role.html)
 - [EKS add-ons](https://docs.aws.amazon.com/eks/latest/userguide/workloads-add-ons-available-eks.html)
+
+- [RDS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance)
+

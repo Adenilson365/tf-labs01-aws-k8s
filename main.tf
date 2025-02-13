@@ -36,19 +36,19 @@ module "private_subnet" {
 
 }
 
-# module "vm" {
-#   source = "./modules/compute/vm"
-#   instance_type = "t3.small"
-#   key_name = "kp-linux"
-#   subnet_id = module.public_subnet[0].subnet_id
-#   security_group_ids = [module.sg[count.index].sg_id]
-#   default_tags = {
-#     "Name"       = "vm-${count.index}",
-#     "managed-by" = "TF"
-#   }
-#   depends_on = [ module.public_subnet, module.sg ]
-#   count = 2
-# }
+module "vm" {
+  source = "./modules/compute/vm"
+  instance_type = "t3.small"
+  key_name = "kp-linux"
+  subnet_id = module.public_subnet[0].subnet_id
+  security_group_ids = [module.sg[1].sg_id]
+  default_tags = {
+    "Name"       = "vm-${count.index}",
+    "managed-by" = "TF"
+  }
+  depends_on = [ module.public_subnet, module.sg ]
+  count = 1
+}
 
 
 module "igw" {
@@ -229,4 +229,135 @@ module "sg_rules-egress-sg1" {
   depends_on = [ module.sg ]
 }
 
+module "sg_rules-ingress-psql-sg1" {
+  source = "./modules/network/sg-rules"
+  security_group_id = module.sg[1].sg_id
+  type_rule = "ingress"
+  from_port = 5432
+  to_port = 5432
+  protocol = "tcp"
+  cidr_blocks  = []
+  source_security_group_id = module.sg[2].sg_id
+
+  depends_on = [ module.sg ]
+}
+
+#Rules sg2
+
+module "sg_rules-egress-sg2" {
+  source = "./modules/network/sg-rules"
+  security_group_id = module.sg[2].sg_id
+  type_rule = "egress"
+  from_port = 0
+  to_port = 0
+  protocol = "-1"
+  cidr_blocks  = ["0.0.0.0/0"]
+    source_security_group_id = null
+  depends_on = [ module.sg ]
+}
+
+module "sg_rules-ingress-ssh-sg2" {
+  source = "./modules/network/sg-rules"
+  security_group_id = module.sg[2].sg_id
+  type_rule = "ingress"
+  from_port = 22
+  to_port = 22
+  protocol = "tcp"
+  cidr_blocks  = []
+  source_security_group_id = module.sg[1].sg_id
+
+  depends_on = [ module.sg ]
+}
+
+module "sg_rules-ingress-http-sg2" {
+  source = "./modules/network/sg-rules"
+  security_group_id = module.sg[2].sg_id
+  type_rule = "ingress"
+  from_port = 80
+  to_port = 80
+  protocol = "tcp"
+  cidr_blocks  = []
+  source_security_group_id = module.sg[0].sg_id
+
+  depends_on = [ module.sg ]
+}
+module "sg_rules-ingress-https-sg2" {
+  source = "./modules/network/sg-rules"
+  security_group_id = module.sg[2].sg_id
+  type_rule = "ingress"
+  from_port = 443
+  to_port = 443
+  protocol = "tcp"
+  cidr_blocks  = []
+  source_security_group_id = module.sg[0].sg_id
+
+  depends_on = [ module.sg ]
+}
+
+module "sg_rules-ingress-psql-sg2" {
+  source = "./modules/network/sg-rules"
+  security_group_id = module.sg[2].sg_id
+  type_rule = "ingress"
+  from_port = 5432
+  to_port = 5432
+  protocol = "tcp"
+  cidr_blocks  = []
+  source_security_group_id = module.sg[3].sg_id
+
+  depends_on = [ module.sg ]
+}
+
+#Rules sg3
+
+module "sg_rules-ingress-sg3" {
+  source = "./modules/network/sg-rules"
+  security_group_id = module.sg[3].sg_id
+  type_rule = "ingress"
+  from_port = 5432
+  to_port = 5432
+  protocol = "tcp"
+  cidr_blocks  = []
+  source_security_group_id = module.sg[count.index+1].sg_id
+
+  depends_on = [ module.sg ]
+  count = 2
+}
+
+module "sg_rules-egress-sg3" {
+  source = "./modules/network/sg-rules"
+  security_group_id = module.sg[3].sg_id
+  type_rule = "egress"
+  from_port = 0
+  to_port = 0
+  protocol = "-1"
+  cidr_blocks  = ["0.0.0.0/0"]
+    source_security_group_id = null
+  depends_on = [ module.sg ]
+}
+
+#RDS
+
+module "rds" {
+  source = "./modules/data/rds"
+  subnet_ids = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
+  allocated_storage = 20
+  engine = "postgres"
+  engine_version = var.engine_version
+  instance_class = var.rds_instance_class
+  db_name = "mydb"
+  username = var.db_username
+  password = var.db_password
+  vpc_security_group_ids = [module.sg[3].sg_id]
+  backup_retention_period = 0
+  multi_az = true
+  publicly_accessible = false
+  skip_final_snapshot = true
+  identifier = "mydbpsql"
+  default_tags = {
+    "Name"       = "devopslabs-rds",
+    "managed-by" = "TF"
+  }
+
+  depends_on = [ module.vpc, module.private_subnet, module.sg ]
+}
 

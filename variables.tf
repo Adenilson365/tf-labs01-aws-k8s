@@ -25,3 +25,32 @@ variable "route_tables" {
   type        = set(string)
   default     = ["rtb-public", "rtb-private"]
 }
+
+
+##RDS Variables
+
+variable "rds_instance_class" {
+  description = "The instance class to use"
+  type        = string
+  default     = "db.t4g.micro"
+}
+
+variable "engine_version" {
+  description = "The version of the database engine to use, use comand: aws rds describe-db-engine-versions --engine postgres --query 'DBEngineVersions[*].EngineVersion'"
+  type        = string
+  default     = "14.15"
+  
+}
+
+variable "db_username" {
+  description = "The username to use for the database"
+  type        = string
+  
+}
+
+variable "db_password" {
+  description = "The password to use for the database"
+  type        = string
+  
+}
+

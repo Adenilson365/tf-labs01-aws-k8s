@@ -29,16 +29,16 @@ output "security_group_ids" {
 
 #Output for RDS
 
-output "rds_endpoint" {
-  value = module.rds.endpoint
-}
+# output "rds_endpoint" {
+#   value = module.rds.endpoint
+# }
 
-output "rds_username" {
-  value = module.rds.username
-}
+# output "rds_username" {
+#   value = module.rds.username
+# }
 
-output "rds_password" {
-  value = module.rds.password
-  sensitive = true
-}
+# output "rds_password" {
+#   value = module.rds.password
+#   sensitive = true
+# }
 

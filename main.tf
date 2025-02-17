@@ -36,19 +36,19 @@ module "private_subnet" {
 
 }
 
-module "vm" {
-  source = "./modules/compute/vm"
-  instance_type = "t3.small"
-  key_name = "kp-linux"
-  subnet_id = module.public_subnet[0].subnet_id
-  security_group_ids = [module.sg[1].sg_id]
-  default_tags = {
-    "Name"       = "vm-${count.index}",
-    "managed-by" = "TF"
-  }
-  depends_on = [ module.public_subnet, module.sg ]
-  count = 1
-}
+# module "vm" {
+#   source = "./modules/compute/vm"
+#   instance_type = "t3.small"
+#   key_name = "kp-linux"
+#   subnet_id = module.public_subnet[0].subnet_id
+#   security_group_ids = [module.sg[1].sg_id]
+#   default_tags = {
+#     "Name"       = "vm-${count.index}",
+#     "managed-by" = "TF"
+#   }
+#   depends_on = [ module.public_subnet, module.sg ]
+#   count = 1
+# }
 
 
 module "igw" {
@@ -337,27 +337,44 @@ module "sg_rules-egress-sg3" {
 
 #RDS
 
-module "rds" {
-  source = "./modules/data/rds"
-  subnet_ids = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
-  allocated_storage = 20
-  engine = "postgres"
-  engine_version = var.engine_version
-  instance_class = var.rds_instance_class
-  db_name = "mydb"
-  username = var.db_username
-  password = var.db_password
-  vpc_security_group_ids = [module.sg[3].sg_id]
-  backup_retention_period = 0
-  multi_az = true
-  publicly_accessible = false
-  skip_final_snapshot = true
-  identifier = "mydbpsql"
-  default_tags = {
-    "Name"       = "devopslabs-rds",
-    "managed-by" = "TF"
-  }
+# module "rds" {
+#   source = "./modules/data/rds"
+#   subnet_ids = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
+#   allocated_storage = 20
+#   engine = "postgres"
+#   engine_version = var.engine_version
+#   instance_class = var.rds_instance_class
+#   db_name = "mydb"
+#   username = var.db_username
+#   password = var.db_password
+#   vpc_security_group_ids = [module.sg[3].sg_id]
+#   backup_retention_period = 0
+#   multi_az = true
+#   publicly_accessible = false
+#   skip_final_snapshot = true
+#   identifier = "mydbpsql"
+#   default_tags = {
+#     "Name"       = "devopslabs-rds",
+#     "managed-by" = "TF"
+#   }
 
-  depends_on = [ module.vpc, module.private_subnet, module.sg ]
+#   depends_on = [ module.vpc, module.private_subnet, module.sg ]
+# }
+
+
+#eks
+
+module "eks" {
+  source = "./modules/compute/eks"
+  node_group_name = var.node_group_name
+  instance_types = var.instance_types
+  desired_size = var.desired_size
+  max_size = var.max_size
+  min_size = var.min_size
+  pvt_subnet_ids = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
+  eks_subnet_ids = [module.public_subnet[0].subnet_id, module.public_subnet[1].subnet_id, module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
+  eks_name = var.eks_name
+  eks_version = var.eks_version
+
 }
 

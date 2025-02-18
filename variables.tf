@@ -39,19 +39,19 @@ variable "engine_version" {
   description = "The version of the database engine to use, use comand: aws rds describe-db-engine-versions --engine postgres --query 'DBEngineVersions[*].EngineVersion'"
   type        = string
   default     = "14.15"
-  
+
 }
 
 variable "db_username" {
   description = "The username to use for the database"
   type        = string
-  
+
 }
 
 variable "db_password" {
   description = "The password to use for the database"
   type        = string
-  
+
 }
 
 #EKS Variables
@@ -59,7 +59,7 @@ variable "db_password" {
 variable "node_group_name" {
   description = "The name of the node group"
   type        = string
-  
+
 }
 
 variable "instance_types" {
@@ -85,7 +85,7 @@ variable "min_size" {
 # variable "pvt_subnet_ids" {
 #   description = "The private subnet IDs to launch the worker nodes into"
 #   type        = list(string)
-  
+
 # }
 
 #EKS Cluster
@@ -96,17 +96,17 @@ variable "min_size" {
 # }
 
 variable "eks_name" {
-    description = "The name of the EKS cluster"
-    type        = string
+  description = "The name of the EKS cluster"
+  type        = string
 }
 
 variable "eks_version" {
-    description = "The Kubernetes version for the EKS cluster"
-    type        = string
+  description = "The Kubernetes version for the EKS cluster"
+  type        = string
 }
 
 variable "authentication_mode" {
-    description = "The authentication mode for the EKS cluster"
-    type        = string
-    default     = "API"
+  description = "The authentication mode for the EKS cluster"
+  type        = string
+  default     = "API"
 }

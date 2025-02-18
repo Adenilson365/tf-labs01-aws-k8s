@@ -10,7 +10,7 @@ variable "default_tags" {
 variable "node_group_name" {
   description = "The name of the node group"
   type        = string
-  
+
 }
 
 variable "instance_types" {
@@ -36,7 +36,7 @@ variable "min_size" {
 variable "pvt_subnet_ids" {
   description = "The private subnet IDs to launch the worker nodes into"
   type        = list(string)
-  
+
 }
 
 #EKS Cluster
@@ -47,17 +47,17 @@ variable "eks_subnet_ids" {
 }
 
 variable "eks_name" {
-    description = "The name of the EKS cluster"
-    type        = string
+  description = "The name of the EKS cluster"
+  type        = string
 }
 
 variable "eks_version" {
-    description = "The Kubernetes version for the EKS cluster"
-    type        = string
+  description = "The Kubernetes version for the EKS cluster"
+  type        = string
 }
 
 variable "authentication_mode" {
-    description = "The authentication mode for the EKS cluster"
-    type        = string
-    default     = "API"
+  description = "The authentication mode for the EKS cluster"
+  type        = string
+  default     = "API"
 }

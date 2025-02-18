@@ -10,9 +10,16 @@ resource "aws_eks_node_group" "node_group" {
     min_size     = var.min_size
   }
 
+  node_repair_config {
+    enabled = true
+  }
+
   tags = var.default_tags
 
-  depends_on = [ aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryPullOnly,
-                 aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodeMinimalPolicy,
-                 aws_eks_cluster.cluster ]
+  depends_on = [ 
+                aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodePolicy, 
+                aws_iam_role_policy_attachment.node_AmazonEKS_CNI_Policy, 
+                aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryPullOnly, 
+                aws_eks_cluster.cluster 
+                ]
 }

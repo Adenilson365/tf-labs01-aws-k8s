@@ -17,5 +17,5 @@ resource "aws_eks_cluster" "cluster" {
     aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
   ]
 
-    tags = var.default_tags
+  tags = var.default_tags
 }

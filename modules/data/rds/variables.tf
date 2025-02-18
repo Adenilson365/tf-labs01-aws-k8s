@@ -16,7 +16,7 @@ variable "subnet_ids" {
 variable "allocated_storage" {
   description = "The amount of storage to allocate to the database, in gigabytes, but only numbers are allowed"
   type        = number
-  
+
 }
 
 variable "engine" {
@@ -57,25 +57,25 @@ variable "vpc_security_group_ids" {
 variable "backup_retention_period" {
   description = "The number of days to retain backups for"
   type        = number
-  default = 0
+  default     = 0
 }
 
 variable "multi_az" {
   description = "Whether to use multi-az"
   type        = bool
-  default = false
+  default     = false
 }
 
 variable "publicly_accessible" {
   description = "Whether the database should be publicly accessible"
   type        = bool
-  default = false
+  default     = false
 }
 
 variable "skip_final_snapshot" {
   description = "Whether to skip the final snapshot"
   type        = bool
-  default = true
+  default     = true
 }
 
 variable "identifier" {

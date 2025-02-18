@@ -48,3 +48,6 @@
 
 - [RDS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance)
 
+
+### Além das policys é necessário criar o acces entry
+![alt text](./docs/access-entry.png)

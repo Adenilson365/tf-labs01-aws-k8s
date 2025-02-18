@@ -15,7 +15,7 @@ resource "aws_iam_role" "cluster_iam" {
       },
     ]
   })
-    tags = merge(var.default_tags, { "Name" = "eks-cluster-iam" })
+  tags = merge(var.default_tags, { "Name" = "eks-cluster-iam" })
 }
 
 resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterPolicy" {

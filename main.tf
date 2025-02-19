@@ -337,29 +337,29 @@ module "sg_rules-egress-sg3" {
 
 #RDS
 
-# module "rds" {
-#   source = "./modules/data/rds"
-#   subnet_ids = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
-#   allocated_storage = 20
-#   engine = "postgres"
-#   engine_version = var.engine_version
-#   instance_class = var.rds_instance_class
-#   db_name = "mydb"
-#   username = var.db_username
-#   password = var.db_password
-#   vpc_security_group_ids = [module.sg[3].sg_id]
-#   backup_retention_period = 0
-#   multi_az = true
-#   publicly_accessible = false
-#   skip_final_snapshot = true
-#   identifier = "mydbpsql"
-#   default_tags = {
-#     "Name"       = "devopslabs-rds",
-#     "managed-by" = "TF"
-#   }
+module "rds" {
+  source = "./modules/data/rds"
+  subnet_ids = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
+  allocated_storage = 20
+  engine = "postgres"
+  engine_version = var.engine_version
+  instance_class = var.rds_instance_class
+  db_name = "mydb"
+  username = var.db_username
+  password = var.db_password
+  vpc_security_group_ids = [module.sg[3].sg_id]
+  backup_retention_period = 0
+  multi_az = true
+  publicly_accessible = false
+  skip_final_snapshot = true
+  identifier = "mydbpsql"
+  default_tags = {
+    "Name"       = "devopslabs-rds",
+    "managed-by" = "TF"
+  }
 
-#   depends_on = [ module.vpc, module.private_subnet, module.sg ]
-# }
+  depends_on = [ module.vpc, module.private_subnet, module.sg ]
+}
 
 
 #eks
@@ -377,5 +377,16 @@ module "eks" {
   eks_version     = var.eks_version
   depends_on      = [module.private_subnet, module.public_subnet]
 
+}
+
+module "access_eks" {
+  source        = "./modules/compute/access-eks"
+  cluster_name  = var.eks_name
+  principal_arn = var.principal_arn
+  type          = var.type
+  policy_arn    = var.policy_arn
+  scope_type    = var.scope_type
+  namespaces    = var.namespaces
+  depends_on    = [module.eks]
 }
 

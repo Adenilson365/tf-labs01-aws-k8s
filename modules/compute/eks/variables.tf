@@ -61,3 +61,8 @@ variable "authentication_mode" {
   type        = string
   default     = "API"
 }
+
+variable "security_group_ids" {
+  description = "The security group IDs to attach to the EKS cluster"
+  type        = list(string)
+}

@@ -6,7 +6,7 @@ resource "aws_eks_access_policy_association" "example" {
   access_scope {
     type       = var.scope_type
     namespaces = var.namespaces != null ? var.namespaces : []
-    
+
   }
 }
 

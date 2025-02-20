@@ -4,6 +4,7 @@ resource "aws_eks_node_group" "node_group" {
   node_role_arn   = aws_iam_role.node_iam.arn
   subnet_ids      = var.pvt_subnet_ids
   instance_types  = var.instance_types
+
   scaling_config {
     desired_size = var.desired_size
     max_size     = var.max_size
@@ -16,10 +17,10 @@ resource "aws_eks_node_group" "node_group" {
 
   tags = var.default_tags
 
-  depends_on = [ 
-                aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodePolicy, 
-                aws_iam_role_policy_attachment.node_AmazonEKS_CNI_Policy, 
-                aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryPullOnly, 
-                aws_eks_cluster.cluster 
-                ]
+  depends_on = [
+    aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.node_AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryPullOnly,
+    aws_eks_cluster.cluster
+  ]
 }

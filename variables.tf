@@ -26,6 +26,25 @@ variable "route_tables" {
   default     = ["rtb-public", "rtb-private"]
 }
 
+#Vm Variables
+
+variable "vm_count" {
+  description = "The ID of the AMI to use for the instance"
+  type        = number
+  default     = 0
+}
+
+variable "instance_type" {
+  description = "The type of instance to launch"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "key_name" {
+  description = "The name of the key pair to use for the instance"
+  type        = string
+}
+
 
 ##RDS Variables
 
@@ -39,6 +58,30 @@ variable "engine_version" {
   description = "The version of the database engine to use, use comand: aws rds describe-db-engine-versions --engine postgres --query 'DBEngineVersions[*].EngineVersion'"
   type        = string
   default     = "14.15"
+
+}
+
+variable "db_name" {
+  description = "The name of the database to create"
+  type        = string
+
+}
+
+variable "identifier" {
+  description = "The name of the RDS instance"
+  type        = string
+
+}
+
+variable "allocated_storage" {
+  description = "The amount of storage to allocate"
+  type        = number
+
+}
+
+variable "engine" {
+  description = "The database engine to use"
+  type        = string
 
 }
 
@@ -116,7 +159,7 @@ variable "authentication_mode" {
 variable "cluster_name" {
   description = "The name of the EKS cluster"
   type        = string
-  
+
 }
 
 variable "principal_arn" {
@@ -132,7 +175,7 @@ variable "type" {
 variable "policy_arn" {
   description = "The ARN of the policy to attach to the EKS cluster"
   type        = string
-  
+
 }
 
 variable "scope_type" {

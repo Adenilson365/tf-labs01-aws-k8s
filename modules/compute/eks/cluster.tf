@@ -1,7 +1,6 @@
 resource "aws_eks_cluster" "cluster" {
   name = var.eks_name
 
-
   access_config {
     authentication_mode = var.authentication_mode
   }
@@ -10,7 +9,9 @@ resource "aws_eks_cluster" "cluster" {
   version  = var.eks_version
 
   vpc_config {
-    subnet_ids = var.eks_subnet_ids
+    subnet_ids         = var.eks_subnet_ids
+    security_group_ids = var.security_group_ids
+
   }
 
   depends_on = [

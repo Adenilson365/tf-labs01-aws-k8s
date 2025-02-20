@@ -1,5 +1,4 @@
 
-
 module "vpc" {
   source         = "./modules/network/vpc"
   vpc_cidr_block = "10.0.0.0/22"
@@ -36,19 +35,19 @@ module "private_subnet" {
 
 }
 
-# module "vm" {
-#   source = "./modules/compute/vm"
-#   instance_type = "t3.small"
-#   key_name = "kp-linux"
-#   subnet_id = module.public_subnet[0].subnet_id
-#   security_group_ids = [module.sg[1].sg_id]
-#   default_tags = {
-#     "Name"       = "vm-${count.index}",
-#     "managed-by" = "TF"
-#   }
-#   depends_on = [ module.public_subnet, module.sg ]
-#   count = 1
-# }
+module "vm" {
+  source             = "./modules/compute/vm"
+  instance_type      = var.instance_type
+  key_name           = var.key_name
+  subnet_id          = module.public_subnet[0].subnet_id
+  security_group_ids = [module.sg[1].sg_id]
+  default_tags = {
+    "Name"       = "vm-${count.index}",
+    "managed-by" = "TF"
+  }
+  depends_on = [module.public_subnet, module.sg]
+  count      = var.vm_count
+}
 
 
 module "igw" {
@@ -83,7 +82,7 @@ module "route_table" {
   depends_on = [module.vpc]
 }
 
-//module.route_table["rtb-public"].aws_route_table.rtb
+
 module "route" {
   source         = "./modules/network/route"
   gateway_id     = module.igw.igw_id
@@ -150,8 +149,22 @@ module "sg" {
   count = 4
 }
 
+# Egress rules for all security groups
+module "sg_rules-egress-all" {
+  source                   = "./modules/network/sg-rules"
+  security_group_id        = module.sg[count.index].sg_id
+  type_rule                = "egress"
+  from_port                = 0
+  to_port                  = 0
+  protocol                 = "-1"
+  cidr_blocks              = ["0.0.0.0/0"]
+  source_security_group_id = null
+  depends_on               = [module.sg]
+  count                    = 4
+}
 
-#Rules sg0
+
+#Ingress Rules sg0
 module "sg_rules-ingress" {
   source                   = "./modules/network/sg-rules"
   security_group_id        = module.sg[0].sg_id
@@ -177,32 +190,8 @@ module "sg_rules-ingress-http" {
   depends_on               = [module.sg]
 }
 
-module "sg_rules-egress" {
-  source                   = "./modules/network/sg-rules"
-  security_group_id        = module.sg[0].sg_id
-  type_rule                = "egress"
-  from_port                = 0
-  to_port                  = 0
-  protocol                 = "-1"
-  cidr_blocks              = ["0.0.0.0/0"]
-  source_security_group_id = null
-  depends_on               = [module.sg]
-}
 
-#Rules sg1
-module "sg_rules-ingress-sg1" {
-  source                   = "./modules/network/sg-rules"
-  security_group_id        = module.sg[1].sg_id
-  type_rule                = "ingress"
-  from_port                = 80
-  to_port                  = 80
-  protocol                 = "tcp"
-  cidr_blocks              = []
-  source_security_group_id = module.sg[0].sg_id
-
-  depends_on = [module.sg]
-}
-
+#Ingress Rules sg1
 
 module "sg_rules-ssh-sg1" {
   source                   = "./modules/network/sg-rules"
@@ -217,17 +206,7 @@ module "sg_rules-ssh-sg1" {
   depends_on = [module.sg]
 }
 
-module "sg_rules-egress-sg1" {
-  source                   = "./modules/network/sg-rules"
-  security_group_id        = module.sg[1].sg_id
-  type_rule                = "egress"
-  from_port                = 0
-  to_port                  = 0
-  protocol                 = "-1"
-  cidr_blocks              = ["0.0.0.0/0"]
-  source_security_group_id = null
-  depends_on               = [module.sg]
-}
+
 
 module "sg_rules-ingress-psql-sg1" {
   source                   = "./modules/network/sg-rules"
@@ -242,19 +221,7 @@ module "sg_rules-ingress-psql-sg1" {
   depends_on = [module.sg]
 }
 
-#Rules sg2
-
-module "sg_rules-egress-sg2" {
-  source                   = "./modules/network/sg-rules"
-  security_group_id        = module.sg[2].sg_id
-  type_rule                = "egress"
-  from_port                = 0
-  to_port                  = 0
-  protocol                 = "-1"
-  cidr_blocks              = ["0.0.0.0/0"]
-  source_security_group_id = null
-  depends_on               = [module.sg]
-}
+#Ingress rules sg2
 
 module "sg_rules-ingress-ssh-sg2" {
   source                   = "./modules/network/sg-rules"
@@ -307,7 +274,7 @@ module "sg_rules-ingress-psql-sg2" {
   depends_on = [module.sg]
 }
 
-#Rules sg3
+#Ingress rules sg3
 
 module "sg_rules-ingress-sg3" {
   source                   = "./modules/network/sg-rules"
@@ -323,59 +290,49 @@ module "sg_rules-ingress-sg3" {
   count      = 2
 }
 
-module "sg_rules-egress-sg3" {
-  source                   = "./modules/network/sg-rules"
-  security_group_id        = module.sg[3].sg_id
-  type_rule                = "egress"
-  from_port                = 0
-  to_port                  = 0
-  protocol                 = "-1"
-  cidr_blocks              = ["0.0.0.0/0"]
-  source_security_group_id = null
-  depends_on               = [module.sg]
-}
 
 #RDS
 
 module "rds" {
-  source = "./modules/data/rds"
-  subnet_ids = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
-  allocated_storage = 20
-  engine = "postgres"
-  engine_version = var.engine_version
-  instance_class = var.rds_instance_class
-  db_name = "mydb"
-  username = var.db_username
-  password = var.db_password
-  vpc_security_group_ids = [module.sg[3].sg_id]
+  source                  = "./modules/data/rds"
+  subnet_ids              = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
+  allocated_storage       = var.allocated_storage
+  engine                  = var.engine
+  engine_version          = var.engine_version
+  instance_class          = var.rds_instance_class
+  db_name                 = var.db_name
+  username                = var.db_username
+  password                = var.db_password
+  vpc_security_group_ids  = [module.sg[3].sg_id]
   backup_retention_period = 0
-  multi_az = true
-  publicly_accessible = false
-  skip_final_snapshot = true
-  identifier = "mydbpsql"
+  multi_az                = true
+  publicly_accessible     = false
+  skip_final_snapshot     = true
+  identifier              = var.identifier
   default_tags = {
     "Name"       = "devopslabs-rds",
     "managed-by" = "TF"
   }
 
-  depends_on = [ module.vpc, module.private_subnet, module.sg ]
+  depends_on = [module.vpc, module.private_subnet, module.sg]
 }
 
 
 #eks
 
 module "eks" {
-  source          = "./modules/compute/eks"
-  node_group_name = var.node_group_name
-  instance_types  = var.instance_types
-  desired_size    = var.desired_size
-  max_size        = var.max_size
-  min_size        = var.min_size
-  pvt_subnet_ids  = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
-  eks_subnet_ids  = [module.public_subnet[0].subnet_id, module.public_subnet[1].subnet_id, module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
-  eks_name        = var.eks_name
-  eks_version     = var.eks_version
-  depends_on      = [module.private_subnet, module.public_subnet]
+  source             = "./modules/compute/eks"
+  node_group_name    = var.node_group_name
+  instance_types     = var.instance_types
+  desired_size       = var.desired_size
+  max_size           = var.max_size
+  min_size           = var.min_size
+  pvt_subnet_ids     = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
+  eks_subnet_ids     = [module.public_subnet[0].subnet_id, module.public_subnet[1].subnet_id, module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
+  eks_name           = var.eks_name
+  eks_version        = var.eks_version
+  depends_on         = [module.private_subnet, module.public_subnet]
+  security_group_ids = [module.sg[0].sg_id, module.sg[2].sg_id]
 
 }
 

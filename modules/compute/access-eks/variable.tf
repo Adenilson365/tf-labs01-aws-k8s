@@ -1,7 +1,7 @@
 variable "cluster_name" {
   description = "The name of the EKS cluster"
   type        = string
-  
+
 }
 
 variable "principal_arn" {
@@ -17,7 +17,7 @@ variable "type" {
 variable "policy_arn" {
   description = "The ARN of the policy to attach to the EKS cluster"
   type        = string
-  
+
 }
 
 variable "scope_type" {

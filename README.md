@@ -48,3 +48,27 @@
 
 - [RDS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance)
 
+
+### Além das policys é necessário criar o acces entry
+![alt text](./docs/access-entry.png)
+
+### Utils
+
+- Adicionar cluster eks ao kubeconfig
+
+```
+aws eks update-kubeconfig --region us-east-1 --name eks-cluster --alias devopslabs
+```
+
+- Listar access policies
+```
+aws eks list-access-entries --cluster-name <NomeCluster>
+```
+- Listar access entrys 
+```
+aws eks list-access-entries --cluster-name <NomeCluster>
+```
+- Verificar o permissionamento de um principal
+```
+aws eks list-associated-access-policies --cluster-name <NomeCluster> --principal-arn <arnDoPrincipalRetornadoPeloComandoAnterior>
+```

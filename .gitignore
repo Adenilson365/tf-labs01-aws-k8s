@@ -9,3 +9,4 @@ terraform.tfstate.backup
 providers.tf
 backend.tf
 terraform.tfvars
+k8s-teste/

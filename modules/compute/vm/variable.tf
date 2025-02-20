@@ -14,19 +14,19 @@ variable "instance_type" {
 }
 
 variable "key_name" {
-    description = "The key name"
-    type        = string
-  
+  description = "The key name"
+  type        = string
+
 }
 
 variable "subnet_id" {
   description = "The subnet ID"
   type        = string
-  
+
 }
 
 variable "security_group_ids" {
   description = "The security group IDs"
-  type        = list(string)    
-  
+  type        = list(string)
+
 }

@@ -1,19 +1,19 @@
 variable "route_table_id" {
   description = "The route table ID"
   type        = string
-  
+
 }
 
 variable "cidr_block" {
   description = "The CIDR block"
   type        = string
-  
+
 }
 
 variable "gateway_id" {
   description = "The gateway ID"
   type        = string
-  
+
 }
 
 variable "default_tags" {
@@ -30,5 +30,5 @@ variable "nat_gateway_id" {
   description = "The NAT Gateway ID"
   type        = string
   default     = ""
-  
+
 }

@@ -10,3 +10,4 @@ providers.tf
 backend.tf
 terraform.tfvars
 k8s-teste/
+export_tf_vars.sh

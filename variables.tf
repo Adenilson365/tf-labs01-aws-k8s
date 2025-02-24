@@ -1,3 +1,15 @@
+variable "profile" {
+  type = string
+}
+
+variable "region" {
+  type = string
+}
+
+variable "backend_key" {
+  type = string
+}
+
 variable "public_subnet_cidr_block" {
   description = "The CIDR block for the VPC"
   type        = list(string)

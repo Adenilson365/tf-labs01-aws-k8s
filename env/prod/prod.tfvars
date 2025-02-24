@@ -1,3 +1,7 @@
+profile = "prd"
+region  = "us-east-1"
+backend_key="tf-state-prod"
+
 #vm vars
 vm_count      = 0
 instance_type = "t3.small"

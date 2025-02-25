@@ -26,6 +26,9 @@ jobs:
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID_DEPLOY }} --profile dev
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY_DEPLOY }} --profile dev
           aws configure set region ${{ vars.AWS_REGION }} --profile dev
+
+          aws configure list-profiles
+
     
 
       # - name: Configurar AWS credentials RemoteState
@@ -49,7 +52,7 @@ jobs:
            -backend-config="key=${{ vars.STATE_KEY }}" \
            -backend-config="dynamodb_table=${{ vars.DYNAMO_TABLE_LOCK }}"   \
            -backend-config="region=${{ vars.AWS_REGION }}" 
-           -backend-config="session_name=remote-state-profile"
+           -backend-config="profile=remote-state-profile"
 
       # - name: Configurar AWS credentials CLI de Deploy
       #   uses: aws-actions/configure-aws-credentials@v4.1.0

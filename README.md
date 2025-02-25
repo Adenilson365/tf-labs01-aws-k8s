@@ -8,8 +8,12 @@
     - Dados sensíveis não devem estar no repositório, documentação deve apontar sua necessidade quando houver.
 
 
+### Diagrama de Arquitetura dos Recursos AWS - Production
 
-![Estágio Atual](/docs/arq-diag.png)
+![Diagrama da Arquitetura em PRD](/docs/aws-prd-diagram.png)
+
+### Diagrama Organizations AWS
+![Diagrama Estrutura Organizations](./docs/aws-org-diagram.png)
 
 ## Security Groups
 - Egress full allow 0.0.0.0/0

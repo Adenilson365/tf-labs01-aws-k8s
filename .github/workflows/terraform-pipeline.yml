@@ -40,7 +40,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEPLOY }}
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -var-file ./env/dev/dev.tfvars
 
 
           

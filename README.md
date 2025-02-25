@@ -72,3 +72,41 @@ aws eks list-access-entries --cluster-name <NomeCluster>
 ```
 aws eks list-associated-access-policies --cluster-name <NomeCluster> --principal-arn <arnDoPrincipalRetornadoPeloComandoAnterior>
 ```
+- Estrutura de diretórios
+```bash
+.
+├── modules
+│   ├── compute
+│   │   ├── access-eks
+│   │   ├── eks
+│   │   └── vm
+│   ├── data
+│   │   └── rds
+│   └── network
+│       ├── igw
+│       ├── nat-gateway
+│       ├── route
+│       ├── route_table
+│       ├── rtb_association
+│       ├── sg
+│       ├── sg-rules
+│       ├── subnet
+│       └── vpc
+├── environments/
+│   ├── dev/
+│   │   ├── variables.tf
+│   │   └── terraform.tfvars
+│   └── prod/
+│       ├── variables.tf
+│       └── terraform.tfvars
+├── variables.tf
+├── output.tf
+└── main.tf
+```
+``` bash
+terraform apply -var-file /environments/dev/terraform.tfvars
+terraform apply -var-file /environments/prod/terraform.tfvars
+
+terraform destroy -var-file /environments/dev/terraform.tfvars
+terraform destroy -var-file /environments/prod/terraform.tfvars
+```

@@ -304,10 +304,10 @@ module "rds" {
   username                = var.db_username
   password                = var.db_password
   vpc_security_group_ids  = [module.sg[3].sg_id]
-  backup_retention_period = 0
-  multi_az                = true
-  publicly_accessible     = false
-  skip_final_snapshot     = true
+  backup_retention_period = var.backup_retention_period
+  multi_az                = var.multi_az
+  publicly_accessible     = var.publicly_accessible
+  skip_final_snapshot     = var.skip_final_snapshot
   identifier              = var.identifier
   default_tags = {
     "Name"       = "devopslabs-rds",

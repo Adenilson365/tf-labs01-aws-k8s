@@ -10,12 +10,14 @@ instance_type = "t3.small"
 #RDS vars
 rds_instance_class = "db.t4g.micro"
 engine_version     = "14.15"
-db_password        = "Admin123"
-db_username        = "postgres"
-db_name            = "mydb"
-identifier         = "mydbpsql"
+db_name            = "mydbprd"
+identifier         = "mydbpsqlprd"
 allocated_storage  = 20
 engine             = "postgres"
+backup_retention_period = 1
+multi_az                = true
+publicly_accessible     = false
+skip_final_snapshot     = true
 
 
 

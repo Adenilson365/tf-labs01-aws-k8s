@@ -30,16 +30,6 @@ jobs:
           aws configure list-profiles
 
     
-
-      # - name: Configurar AWS credentials RemoteState
-      #   uses: aws-actions/configure-aws-credentials@v4.1.0
-      #   with:
-      #     aws-region: ${{ vars.AWS_REGION }}
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_STATE }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_STATE }}
-      #     session-name: "tf" 
-
-
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.3
 
@@ -51,16 +41,8 @@ jobs:
            -backend-config="bucket=${{ secrets.BUCKET_NAME_STATE }}" \
            -backend-config="key=${{ vars.STATE_KEY }}" \
            -backend-config="dynamodb_table=${{ vars.DYNAMO_TABLE_LOCK }}"   \
-           -backend-config="region=${{ vars.AWS_REGION }}" 
+           -backend-config="region=${{ vars.AWS_REGION }}" \
            -backend-config="profile=remote-state-profile"
-
-      # - name: Configurar AWS credentials CLI de Deploy
-      #   uses: aws-actions/configure-aws-credentials@v4.1.0
-      #   with:
-      #     aws-region: ${{ vars.AWS_REGION }}
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEPLOY }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEPLOY }}
-      #     session-name: "dev" 
 
 
       - name: Terraform Plan

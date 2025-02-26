@@ -1,11 +1,14 @@
-name: Terraform Pipeline
+name: Terraform apply
 on:
   workflow_dispatch:
-
+  push:
+    branches:
+      - main
+      - dev
 jobs:
-  terraform_plan: 
-    name: Terraform plan dev
-    environment: dev
+  terraform_apply: 
+    name: Terraform destroy ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
+    environment: ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -38,6 +41,9 @@ jobs:
           export TF_VAR_db_username="${{ secrets.DB_USER }}"
           export TF_VAR_key_name="${{ secrets.EC2_KEY_NAME }}"
           export TF_VAR_principal_arn="${{ secrets.AWS_PRINCIPAL_ARN }}"
+          
+          terraform plan -var-file ./env/${{ vars.ENV_DEPLOY }}/${{ vars.ENV_DEPLOY }}.tfvars -no-color -out=tfplan
+
           terraform apply --auto-approve -var-file ./env/${{ vars.ENV_DEPLOY }}/${{ vars.ENV_DEPLOY }}.tfvars
 
 

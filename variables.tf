@@ -113,28 +113,28 @@ variable "backup_retention_period" {
   description = "The number of days to retain backups for"
   type        = number
   default     = 0
-  
+
 }
 
 variable "multi_az" {
   description = "Create a multi-AZ RDS instance"
   type        = bool
   default     = false
-  
+
 }
 
 variable "publicly_accessible" {
   description = "Create a publicly accessible RDS instance"
   type        = bool
   default     = false
-  
+
 }
 
 variable "skip_final_snapshot" {
   description = "Skip the final snapshot when destroying the RDS instance"
   type        = bool
   default     = true
-  
+
 }
 #EKS Variables
 

@@ -1,11 +1,10 @@
-name: Terraform Pipeline
+name: Terraform apply
 on:
   workflow_dispatch:
-
 jobs:
-  terraform_plan: 
-    name: Terraform plan dev
-    environment: dev
+  terraform_apply: 
+    name: Terraform destroy ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
+    environment: ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
     runs-on: ubuntu-latest
 
     steps:

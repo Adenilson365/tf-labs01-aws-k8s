@@ -41,7 +41,7 @@ jobs:
       - name: Terraform fmt
         id: fmt
         if: ${{ success() }}
-        run: terraform fmt -check
+        run: terraform fmt -recursive -check
 
       - name: Terraform Validate
         id: validate

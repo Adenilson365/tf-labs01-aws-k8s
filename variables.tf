@@ -55,6 +55,7 @@ variable "instance_type" {
 variable "key_name" {
   description = "The name of the key pair to use for the instance"
   type        = string
+  sensitive = true
 }
 
 
@@ -100,12 +101,14 @@ variable "engine" {
 variable "db_username" {
   description = "The username to use for the database"
   type        = string
+  sensitive = true
 
 }
 
 variable "db_password" {
   description = "The password to use for the database"
   type        = string
+  sensitive = true
 
 }
 
@@ -204,6 +207,7 @@ variable "cluster_name" {
 variable "principal_arn" {
   description = "The ARN of the principal to allow access to the EKS cluster"
   type        = string
+  sensitive = true
 }
 
 variable "type" {

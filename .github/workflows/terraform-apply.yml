@@ -7,7 +7,7 @@ on:
       - dev
 jobs:
   terraform_apply: 
-    name: Terraform destroy ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
+    name: Terraform apply ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
     environment: ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
     runs-on: ubuntu-latest
 

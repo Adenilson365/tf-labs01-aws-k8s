@@ -1,0 +1,28 @@
+name: pr-submit
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+jobs:
+    tf_plan:
+        uses: Adenilson365/tf-labs01-aws-k8s/.github/workflows/terraform-plan.yml@main
+        secrets: inherit
+    pr_submit:
+        needs: tf_plan
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Repositório
+              uses: actions/checkout@v4
+            
+            - name: Download Plan
+              uses: actions/download-artifact@v4
+              with:
+                name: tfplan-${{ github.ref_name == 'main' && 'prod' || 'dev' }}
+            
+            - name: Verificar Plan
+              run: cat plan.txt 
+            
+
+                  
+

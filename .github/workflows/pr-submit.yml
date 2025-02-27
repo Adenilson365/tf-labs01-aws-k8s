@@ -7,6 +7,7 @@ on:
 jobs:
     tf_plan:
         uses: Adenilson365/tf-labs01-aws-k8s/.github/workflows/terraform-plan.yml@main
+
         secrets: inherit
     pr_submit:
         needs: tf_plan
@@ -24,5 +25,4 @@ jobs:
               run: cat plan.txt 
             
 
-                  
-
+    

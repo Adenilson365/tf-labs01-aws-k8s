@@ -8,7 +8,7 @@ on:
       - release/*
 jobs:
     tf_plan:
-        uses: Adenilson365/tf-labs01-aws-k8s/.github/workflows/terraform-plan.yml@main
+        uses: Adenilson365/tf-labs01-aws-k8s/.github/workflows/terraform-plan.yml@dev
     
     tf-plan-output:
         needs: tf_plan

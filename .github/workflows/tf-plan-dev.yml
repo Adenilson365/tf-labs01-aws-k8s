@@ -32,13 +32,13 @@ jobs:
                 cat plan.txt | grep "Plan:" || exit 0
                 echo "===================================================================================================="
                 echo "Recursos a serem destruídos"  
-                cat plan.txt | grep "will be destroyed" || exit 0
+                cat plan.txt | grep "will be destroyed" || echo "Nenhum recurso será destruído"
                 echo "===================================================================================================="
                 echo "Recursos a serem modificados"
-                cat plan.txt | grep "to be changed" || exit 0
+                cat plan.txt | grep "to be changed" || echo "Nenhum recurso será alterado"
                 echo "===================================================================================================="
                 echo "Recursos a serem criados"
-                cat plan.txt | grep "to be created" || exit 0
+                cat plan.txt | grep "to be created" || echo "Nenhum recurso será criado"
 
 
 

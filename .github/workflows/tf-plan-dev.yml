@@ -9,6 +9,7 @@ on:
 jobs:
     tf_plan:
         uses: Adenilson365/tf-labs01-aws-k8s/.github/workflows/terraform-plan.yml@dev
+        secrets: inherit
     
     tf-plan-output:
         needs: tf_plan

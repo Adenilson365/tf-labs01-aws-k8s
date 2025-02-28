@@ -7,11 +7,13 @@ on:
 jobs:
     tf_plan:
         uses: Adenilson365/tf-labs01-aws-k8s/.github/workflows/terraform-plan.yml@main
-
         secrets: inherit
     pr_submit:
         needs: tf_plan
         runs-on: ubuntu-latest
+        permissions:
+          pull-requests: write
+          issues: write
         steps:
             - name: Checkout Repositório
               uses: actions/checkout@v4
@@ -23,6 +25,43 @@ jobs:
             
             - name: Verificar Plan
               run: cat plan.txt 
-            
+
+            - name: Resumo do Plano
+              run: |
+                echo "Resumo do plano"
+                cat plan.txt | grep "Plan:"
+                echo "===================================================================================================="
+                echo "Recursos a serem destruídos"  
+                cat plan.txt | grep "will be destroyed"
+                echo "===================================================================================================="
+                echo "Recursos a serem modificados"
+                cat plan.txt | grep "to be changed"
+                echo "===================================================================================================="
+                echo "Recursos a serem criados"
+                cat plan.txt | grep "to be created"
+
+            - name: Comentar PR
+              uses: actions/github-script@v7
+              with:
+                script: |
+                  github.rest.issues.createComment({
+                    issue_number: context.issue.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    body: '👋 Thanks for reporting!
+                    echo "Resumo do plano"
+                    cat plan.txt | grep "Plan:"
+                    echo "===================================================================================================="
+                    echo "Recursos a serem destruídos"
+                    cat plan.txt | grep "will be destroyed"
+                    echo "===================================================================================================="
+                    echo "Recursos a serem modificados"
+                    cat plan.txt | grep "to be changed"
+                    echo "===================================================================================================="
+                    echo "Recursos a serem criados"
+                    cat plan.txt | grep "to be created"'
+                  })
+          
+
 
     

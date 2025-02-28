@@ -13,6 +13,8 @@
 ![Diagrama da Arquitetura em PRD](/docs/aws-prd-diagram.png)
 
 ### Diagrama Organizations AWS
+- Ambientes baseados em multi-account usando aws organizations
+
 ![Diagrama Estrutura Organizations](./docs/aws-org-diagram.png)
 
 ## Security Groups

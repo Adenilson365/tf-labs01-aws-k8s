@@ -17,6 +17,9 @@ jobs:
         steps:
             - name: Checkout Repositório
               uses: actions/checkout@v4
+
+            - name: Teste environment
+              run: echo ${{ github.ref_name == 'main' && 'prod' || (github.ref_name == 'dev' && 'dev' || 'feat') }}
             
             - name: Download Plan
               uses: actions/download-artifact@v4
@@ -25,3 +28,4 @@ jobs:
             
             - name: Verificar Plan
               run: cat plan.txt 
+            

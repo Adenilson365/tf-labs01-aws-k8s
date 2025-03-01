@@ -6,6 +6,17 @@ on:
       - hotfix/*
       - bugfix/*
       - release/*
+    branches-ignore:
+      - main
+      - dev 
+      - docs/*
+      - pipeline/*
+    paths-ignore:
+      - 'docs/**'
+      - '.github/workflows/**'
+      - 'README.md'
+      - 'LICENSE'
+      - 'CONTRIBUTING.md' 
 jobs:
     tf_plan:
         uses: Adenilson365/tf-labs01-aws-k8s/.github/workflows/terraform-plan.yml@dev

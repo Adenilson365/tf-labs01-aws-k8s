@@ -5,6 +5,15 @@ on:
     branches:
       - main
       - dev
+    branches-ignore:
+      - docs/*
+      - pipeline/*
+    paths-ignore:
+      - 'docs/**'
+      - '.github/workflows/**'
+      - 'README.md'
+      - 'LICENSE'
+      - 'CONTRIBUTING.md' 
 jobs:
   terraform_apply: 
     name: Terraform apply ${{ github.ref_name == 'main' && 'prod' || 'dev' }}

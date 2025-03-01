@@ -4,6 +4,15 @@ on:
     branches:
       - main
       - dev
+    branches-ignore:
+      - docs/*
+      - pipeline/*
+    paths-ignore:
+      - 'docs/**'
+      - '.github/workflows/**'
+      - 'README.md'
+      - 'LICENSE'
+      - 'CONTRIBUTING.md' 
 jobs:
     tf_plan:
         uses: Adenilson365/tf-labs01-aws-k8s/.github/workflows/terraform-plan.yml@main
@@ -57,8 +66,8 @@ jobs:
                       }
                     }
 
-                    const planDetails = runCommand('cat plan.txt | grep "Plan:"') || "Não afeta";
-                    const rds = runCommand('cat plan.txt | grep "module.rds"')
+                    const planDetails = runCommand('cat plan.txt | grep "Plan:"') || "Nenhum plano disponível";
+                    const rds = runCommand('cat plan.txt | grep "module.rds"') || "Banco de dados não será afetado";
                     const destroyResources = runCommand('cat plan.txt | grep "will be destroyed"') || "Nenhum recurso será destruído";
                     const modifyResources = runCommand('cat plan.txt | grep "will be changed"') || "Nenhum recurso será alterado";
                     const createResources = runCommand('cat plan.txt | grep "will be created"') || "Nenhum recurso será criado";

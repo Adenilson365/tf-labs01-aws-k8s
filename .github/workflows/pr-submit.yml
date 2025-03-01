@@ -11,6 +11,9 @@ jobs:
     pr_submit:
         needs: tf_plan
         runs-on: ubuntu-latest
+        permissions:
+          pull-requests: write
+          issues: write
         steps:
             - name: Checkout Repositório
               uses: actions/checkout@v4
@@ -22,7 +25,68 @@ jobs:
             
             - name: Verificar Plan
               run: cat plan.txt 
-            
 
-                  
+            - name: Resumo do Plano
+              run: |
+                echo "Resumo do plano"
+                cat plan.txt | grep "Plan:" || exit 0
+                echo "===================================================================================================="
+                echo "Recursos a serem destruídos"  
+                cat plan.txt | grep "will be destroyed" || echo "Nenhum recurso será destruído"
+                echo "===================================================================================================="
+                echo "Recursos a serem modificados"
+                cat plan.txt | grep "will be changed" || echo "Nenhum recurso será alterado"
+                echo "===================================================================================================="
+                echo "Recursos a serem criados"
+                cat plan.txt | grep "will be created" || echo "Nenhum recurso será criado"
 
+            - name: Comentar PR
+              uses: actions/github-script@v7
+              with:
+                script: |
+                    const { execSync } = require('child_process');
+
+                    function runCommand(command) {
+                      try {
+                        const output = execSync(command, { encoding: 'utf-8' }).trim();
+                        return output
+                          ? output.split("\n").map(line => `<p>${line.split("will be")[0]}</p>`)
+                          : "<p>Nenhum recurso será afetado</p>";
+                      } catch {
+                        return "<p>Nenhum recurso será afetado</p>";
+                      }
+                    }
+
+                    const planDetails = runCommand('cat plan.txt | grep "Plan:"') || "Não afeta";
+                    const rds = runCommand('cat plan.txt | grep "module.rds"')
+                    const destroyResources = runCommand('cat plan.txt | grep "will be destroyed"') || "Nenhum recurso será destruído";
+                    const modifyResources = runCommand('cat plan.txt | grep "will be changed"') || "Nenhum recurso será alterado";
+                    const createResources = runCommand('cat plan.txt | grep "will be created"') || "Nenhum recurso será criado";
+
+
+                    const commentBody = `Resumo:\n
+                    <h1>${planDetails}</h1><br>
+                    <p1>Detalhes do plano no artefato disponível para download</p1>
+                    "=====================================================================================";
+                    <h1>🛑[CUIDADO]-Essa feature afeta banco de dados:</h1>
+                    ${rds}
+                    "=====================================================================================";
+                    <h1> 🚫 Recursos a serem destruídos</h1><br>
+                    ${destroyResources}
+                    "=====================================================================================";
+                    <h1> ⚠️ Recursos a serem modificados</h1><br>
+                    ${modifyResources}
+                    "=====================================================================================";
+                    <h1> ✅ Recursos a serem criados</h1><br>
+                    ${createResources}`;
+
+                    github.rest.issues.createComment({
+                      issue_number: context.issue.number,
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      body: commentBody
+                    });
+          
+
+
+    

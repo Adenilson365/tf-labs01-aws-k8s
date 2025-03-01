@@ -29,16 +29,16 @@ jobs:
             - name: Resumo do Plano
               run: |
                 echo "Resumo do plano"
-                cat plan.txt | grep "Plan:"
+                cat plan.txt | grep "Plan:" || exit 0
                 echo "===================================================================================================="
                 echo "Recursos a serem destruídos"  
-                cat plan.txt | grep "will be destroyed"
+                cat plan.txt | grep "will be destroyed" || echo "Nenhum recurso será destruído"
                 echo "===================================================================================================="
                 echo "Recursos a serem modificados"
-                cat plan.txt | grep "to be changed"
+                cat plan.txt | grep "will be changed" || echo "Nenhum recurso será alterado"
                 echo "===================================================================================================="
                 echo "Recursos a serem criados"
-                cat plan.txt | grep "to be created"
+                cat plan.txt | grep "will be created" || echo "Nenhum recurso será criado"
 
 
 

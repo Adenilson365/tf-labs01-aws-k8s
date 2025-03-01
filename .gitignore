@@ -10,3 +10,6 @@ terraform.tfstate.backup
 terraform.tfvars
 k8s-teste/
 export_tf_vars.sh
+
+plan.txt
+tfplan*

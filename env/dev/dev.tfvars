@@ -3,8 +3,8 @@ region      = "us-east-1"
 backend_key = "tf-state-dev"
 
 #vm vars
-vm_count      = 0
-instance_type = "t2.micro"
+vm_count      = 1
+instance_type = "t3.small"
 
 
 #RDS vars

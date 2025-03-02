@@ -6,11 +6,6 @@ on:
       - hotfix/*
       - bugfix/*
       - release/*
-    branches-ignore:
-      - main
-      - dev 
-      - docs/*
-      - pipeline/*
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/**'

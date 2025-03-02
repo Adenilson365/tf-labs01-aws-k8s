@@ -1,5 +1,5 @@
 ### Objetivos
-- Prática de IAC com Terraform e Cloud AWS.
+- Praticar Infraestrutura como Código (IaC) utilizando Terraform na AWS.
     - Terraform deve ser modular
     - Deve prover RemoteState e StateLock.
     - Git deve ser a fonte de verdade
@@ -9,7 +9,7 @@
             - exemplo: **Prod** RDS com DR multi-az **Dev** RDS apenas com backup.
 - Usar pipeline para deployar infra.
     - Github Actions
-- Prover um ambiente base para laboratórios kubernetes.
+- Prover um ambiente base para receber laboratórios de kubernetes.
 - O laboratório deve estar documentado e ser replicável
     - Dados sensíveis não devem estar no repositório, documentação deve apontar sua necessidade quando houver.
 
@@ -44,7 +44,10 @@
 
 ### Justificativas da abordagem: 
 
-## GitActions
+<details closed>
+<summary><strong>Github Actions</strong></summary>
+<br>
+
 - uso de environment
     - Facilita o gerenciamento e isolamento de ambientes
     - Permite o uso de váriaveis especificas para o ambiente, isso facilita o reaproveitamento de workflows que fazem a mesma coisa para ambientes diferentes.
@@ -57,11 +60,16 @@
     - Apontando no PR recursos que sofrerão alterações e dando enfase nos recursos sensíveis, exemplo banco de dados.
 - Uso de artifact
     - Para armazenar o plano completo, caso precise de um review mais cuidadoso
+    
+</details>
 
+<details closed>
+<summary><strong>AWS Security Groups</strong></summary>
+<br>
 
-## AWS
+- ❗ Importate: Toda a aplicação fica em subnete privada, sem tráfego de entrada
+    - O tráfego de entrada do usuário apenas via ALB
 
-### Security Groups (SG)
 - Pensado na idéia de reduzir superficie de ataque, onde cada SG aceita apenas o trafego necessário.
     - Exemplo: Banco de dados Postgres não precisa abrir portas 22, 3306, 443 etc..
         - Se abre a 5432 é apenas para o SG do recurso que vai consumir o banco.
@@ -74,25 +82,27 @@
 | **SG-01**      | -                          | Allow 22 from restricted-ip<br>Allow 5432 from SG-03                          |
 | **SG-02**      | -                          | Allow 22 from SG-01<br>Allow 5432 from SG-03<br>Allow 80/443 from SG-0        |
 | **SG-03**      | -                          | Allow 5432 from SG-02<br>Allow 5432 from SG-01                                |
+    
+</details>
 
 
-### Organizations
-- 
+<details closed>
+<summary><strong>AWS Organizatios</strong></summary>
+<br>
+
+- Criar uma estrutura clara de separação/isolamento dos ambientes
+- Podendo assim gerenciar atraves do AWS Organizations os aspectos desses ambientes
+    - Permisionamento
+    - Billing
+    - Segurança
+    - Dimensão
+
+</details>
 
 
-### Documentação de referência
-
-- [Github Actions ](https://docs.github.com/en/actions)
-- [Terraform](https://developer.hashicorp.com/terraform/language)
-- [Terraform Provider](https://registry.terraform.io/providers/hashicorp/aws/latest)
-- [AWS - EKS](https://docs.aws.amazon.com/eks/latest/best-practices/introduction.html)
-- [Instâncias RDS ](https://aws.amazon.com/pt/rds/instance-types/)
-
-### Necessário criar policys para EKS controlar seus nós
-- Necessário criar a acces-entry para o admin do cluster
-
-
-### Utils
+<details closed>
+<summary><strong>Utils: Comandos AWS-CLI, ferramentas, extras</strong></summary>
+<br>
 
 [LENS - GUI para gerenciar cluster kubernetes](https://k8slens.dev/)
 
@@ -114,6 +124,20 @@ aws eks list-access-entries --cluster-name <NomeCluster>
 ```
 aws eks list-associated-access-policies --cluster-name <NomeCluster> --principal-arn <arnDoPrincipalRetornadoPeloComandoAnterior>
 ```
+
+</details>
+
+### Documentação de referência
+
+- [Github Actions ](https://docs.github.com/en/actions)
+- [Terraform](https://developer.hashicorp.com/terraform/language)
+- [Terraform Provider](https://registry.terraform.io/providers/hashicorp/aws/latest)
+- [AWS - EKS](https://docs.aws.amazon.com/eks/latest/best-practices/introduction.html)
+- [Instâncias RDS ](https://aws.amazon.com/pt/rds/instance-types/)
+
+### Necessário criar policys para EKS controlar seus nós
+- Necessário criar a acces-entry para o admin do cluster
+
 - Estrutura de diretórios Terraform
 ```bash
 .

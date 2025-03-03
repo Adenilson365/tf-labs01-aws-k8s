@@ -23,6 +23,9 @@ jobs:
               with:
                 name: tfplan-${{ github.ref_name == 'main' && 'prod' || 'dev' }}
             
+            - name: verifica o ref_name
+              run: echo ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'dev' && 'dev' || 'feat' }}
+            
             - name: Verificar Plan
               run: cat plan.txt 
 

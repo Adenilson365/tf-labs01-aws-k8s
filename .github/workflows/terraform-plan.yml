@@ -10,6 +10,10 @@ jobs:
     steps:
       - name: Checkout Repositório
         uses: actions/checkout@v4
+        
+      - name: verifica o ref_name
+        run: echo ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'dev' && 'dev' || 'feat' }}
+
       
       - name: Configurar AWS credentials CLI de Deploy
         uses: aws-actions/configure-aws-credentials@v4.1.0

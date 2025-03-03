@@ -333,19 +333,19 @@ module "sg_rules-ingress-sg3" {
 #eks
 
 module "eks" {
-  source             = "./modules/compute/eks"
-  node_group_name    = var.node_group_name
-  instance_types     = var.instance_types
-  desired_size       = var.desired_size
-  max_size           = var.max_size
-  min_size           = var.min_size
-  pvt_subnet_ids     = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
-  eks_subnet_ids     = [module.public_subnet[0].subnet_id, module.public_subnet[1].subnet_id, module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
-  eks_name           = var.eks_name
-  eks_version        = var.eks_version
-  depends_on         = [module.private_subnet, module.public_subnet]
-  security_group_ids = [module.sg[0].sg_id, module.sg[2].sg_id, module.sg[4].sg_id]
-  key_name = var.key_name
+  source                          = "./modules/compute/eks"
+  node_group_name                 = var.node_group_name
+  instance_types                  = var.instance_types
+  desired_size                    = var.desired_size
+  max_size                        = var.max_size
+  min_size                        = var.min_size
+  pvt_subnet_ids                  = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
+  eks_subnet_ids                  = [module.public_subnet[0].subnet_id, module.public_subnet[1].subnet_id, module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
+  eks_name                        = var.eks_name
+  eks_version                     = var.eks_version
+  depends_on                      = [module.private_subnet, module.public_subnet]
+  security_group_ids              = [module.sg[0].sg_id, module.sg[2].sg_id, module.sg[4].sg_id]
+  key_name                        = var.key_name
   security_group_ids_to_nodegroup = [module.sg[2].sg_id, module.sg[4].sg_id]
 
 }

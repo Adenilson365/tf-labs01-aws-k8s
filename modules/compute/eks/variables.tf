@@ -76,5 +76,5 @@ variable "key_name" {
 variable "security_group_ids_to_nodegroup" {
   description = "The security group IDs to attach to the EKS node group"
   type        = list(string)
-  
+
 }

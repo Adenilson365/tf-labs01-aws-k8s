@@ -23,10 +23,7 @@ jobs:
             - name: Download Plan
               uses: actions/download-artifact@v4
               with:
-                name: tfplan-${{ github.ref_name == 'main' && 'prod' || 'dev' }}
-            
-            - name: verifica o ref_name
-              run: echo ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'dev' && 'dev' || 'feat' }}
+                name: tfplan-${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
             
             - name: Verificar Plan
               run: cat plan.txt 

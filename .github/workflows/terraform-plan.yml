@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
         
       - name: verifica o ref_name
-        run: echo ${{ inputs.conext }}"
+        run: echo "${{ inputs.conext }}"
 
       
       - name: Configurar AWS credentials CLI de Deploy

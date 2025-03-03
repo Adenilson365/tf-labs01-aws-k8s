@@ -4,12 +4,14 @@ on:
     branches:
       - main
       - dev
+env:
+  context: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
 jobs:
     tf_plan:
         uses: Adenilson365/tf-labs01-aws-k8s/.github/workflows/terraform-plan.yml@main
         secrets: inherit
         with: 
-          context: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
+          conext: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
     pr_submit:
         needs: tf_plan
         runs-on: ubuntu-latest
@@ -23,7 +25,7 @@ jobs:
             - name: Download Plan
               uses: actions/download-artifact@v4
               with:
-                name: tfplan-${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
+                name: tfplan-${{ env.context == 'main' && 'prod' || env.context == 'dev' && 'dev' || 'feat' }}
             
             - name: Verificar Plan
               run: cat plan.txt 

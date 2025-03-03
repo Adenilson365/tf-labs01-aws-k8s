@@ -146,7 +146,7 @@ module "sg" {
     "Name"       = "security-${count.index}",
     "managed-by" = "TF"
   }
-  count = 4
+  count = 5
 }
 
 # Egress rules for all security groups
@@ -160,7 +160,7 @@ module "sg_rules-egress-all" {
   cidr_blocks              = ["0.0.0.0/0"]
   source_security_group_id = null
   depends_on               = [module.sg]
-  count                    = 4
+  count                    = 5
 }
 
 
@@ -174,6 +174,18 @@ module "sg_rules-ingress" {
   protocol                 = "tcp"
   cidr_blocks              = ["0.0.0.0/0"]
   source_security_group_id = null
+  depends_on               = [module.sg]
+}
+
+module "sg_rules-ingress-eks" {
+  source                   = "./modules/network/sg-rules"
+  security_group_id        = module.sg[4].sg_id
+  type_rule                = "ingress"
+  from_port                = "-1"
+  to_port                  = "-1"
+  protocol                 = "-1"
+  cidr_blocks              = []
+  source_security_group_id = module.sg[4].sg_id
   depends_on               = [module.sg]
 }
 
@@ -293,29 +305,29 @@ module "sg_rules-ingress-sg3" {
 
 #RDS
 
-module "rds" {
-  source                  = "./modules/data/rds"
-  subnet_ids              = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
-  allocated_storage       = var.allocated_storage
-  engine                  = var.engine
-  engine_version          = var.engine_version
-  instance_class          = var.rds_instance_class
-  db_name                 = var.db_name
-  username                = var.db_username
-  password                = var.db_password
-  vpc_security_group_ids  = [module.sg[3].sg_id]
-  backup_retention_period = var.backup_retention_period
-  multi_az                = var.multi_az
-  publicly_accessible     = var.publicly_accessible
-  skip_final_snapshot     = var.skip_final_snapshot
-  identifier              = var.identifier
-  default_tags = {
-    "Name"       = "devopslabs-rds",
-    "managed-by" = "TF"
-  }
+# module "rds" {
+#   source                  = "./modules/data/rds"
+#   subnet_ids              = [module.private_subnet[0].subnet_id, module.private_subnet[1].subnet_id]
+#   allocated_storage       = var.allocated_storage
+#   engine                  = var.engine
+#   engine_version          = var.engine_version
+#   instance_class          = var.rds_instance_class
+#   db_name                 = var.db_name
+#   username                = var.db_username
+#   password                = var.db_password
+#   vpc_security_group_ids  = [module.sg[3].sg_id]
+#   backup_retention_period = var.backup_retention_period
+#   multi_az                = var.multi_az
+#   publicly_accessible     = var.publicly_accessible
+#   skip_final_snapshot     = var.skip_final_snapshot
+#   identifier              = var.identifier
+#   default_tags = {
+#     "Name"       = "devopslabs-rds",
+#     "managed-by" = "TF"
+#   }
 
-  depends_on = [module.vpc, module.private_subnet, module.sg]
-}
+#   depends_on = [module.vpc, module.private_subnet, module.sg]
+# }
 
 
 #eks
@@ -332,7 +344,9 @@ module "eks" {
   eks_name           = var.eks_name
   eks_version        = var.eks_version
   depends_on         = [module.private_subnet, module.public_subnet]
-  security_group_ids = [module.sg[0].sg_id, module.sg[2].sg_id]
+  security_group_ids = [module.sg[0].sg_id, module.sg[2].sg_id, module.sg[4].sg_id]
+  key_name = var.key_name
+  security_group_ids_to_nodegroup = [module.sg[2].sg_id, module.sg[4].sg_id]
 
 }
 

@@ -15,6 +15,11 @@ resource "aws_eks_node_group" "node_group" {
     enabled = true
   }
 
+    launch_template {
+    id      = aws_launch_template.eks_worker_lt.id
+    version = "$Latest"
+  }
+
   tags = var.default_tags
 
   depends_on = [

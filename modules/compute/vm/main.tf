@@ -21,14 +21,6 @@ resource "aws_instance" "ec2" {
   security_groups = var.security_group_ids
   key_name        = var.key_name
 
-  user_data = <<-EOF
-              #!/bin/bash
-              sudo apt update -y
-              sudo apt install apache2 -y
-              sudo systemctl start apache2
-              sudo systemctl enable apache2
-              sudo apt install curl -y
-              EOF
 
   tags = var.default_tags
 }

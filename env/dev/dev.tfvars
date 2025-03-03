@@ -4,7 +4,7 @@ backend_key = "tf-state-dev"
 
 #vm vars
 vm_count      = 0
-instance_type = "t2.micro"
+instance_type = "t3.small"
 
 
 #RDS vars

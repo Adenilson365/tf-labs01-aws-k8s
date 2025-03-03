@@ -1,10 +1,14 @@
 name: Terraform Plan
 on:
   workflow_call:
+    inputs: 
+      conext:
+        required: true
+        type: string
 jobs:
   terraform_plan: 
-    name: Terraform plan ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'dev' && 'dev' || 'feat' }}
-    environment: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'dev' && 'dev' || 'feat' }}
+    name: Terraform plan ${{ inputs.conext == 'main' && 'prod' || inputs.conext == 'dev' && 'dev' || 'feat' }}
+    environment: ${{ inputs.conext == 'main' && 'prod' || inputs.conext == 'dev' && 'dev' || 'feat' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -12,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
         
       - name: verifica o ref_name
-        run: echo ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'dev' && 'dev' || 'feat' }}
+        run: echo ${{ inputs.conext }}"
 
       
       - name: Configurar AWS credentials CLI de Deploy
@@ -60,7 +64,7 @@ jobs:
         if: ${{ success() }}
         uses: actions/upload-artifact@v4
         with:
-          name: tfplan-${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'dev' && 'dev' || 'feat' }}
+          name: tfplan-${{ inputs.conext == 'main' && 'prod' || inputs.conext == 'dev' && 'dev' || 'feat' }}
           path: ./plan.txt
           overwrite: true
 

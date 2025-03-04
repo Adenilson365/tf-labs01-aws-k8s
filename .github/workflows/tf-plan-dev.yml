@@ -6,6 +6,13 @@ on:
       - hotfix/*
       - bugfix/*
       - release/*
+    paths-ignore:
+      - 'docs/**'
+      - '.github/workflows/**'
+      - 'README.md'
+      - 'LICENSE'
+      - 'CONTRIBUTING.md' 
+
 env:
   context: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
 concurrency:

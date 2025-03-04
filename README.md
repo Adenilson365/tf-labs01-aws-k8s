@@ -1,18 +1,25 @@
-### Objetivos
-- Praticar Infraestrutura como Código (IaC) utilizando Terraform na AWS.
-    - Terraform deve ser modular
-    - Deve prover RemoteState e StateLock.
-    - Git deve ser a fonte de verdade
+# Projeto: LAB de IAC (Terraform + AWS)
+
+Este repositório contém um laboratório de Infraestrutura como Código (IaC) utilizando Terraform na AWS. O objetivo é criar um ambiente modularizado e automatizado, seguindo boas práticas como controle de versão, deploy multi-ambiente e pipelines de CI/CD.
+
+###
+
+## Objetivos
+- **Praticar Infraestrutura como Código (IaC) utilizando Terraform na AWS.**
+    - Terraform deve usar **modules**
+    - Deve prover **RemoteState** e **StateLock**.
+    - Git deve ser a **fonte de verdade**
     - Deve permitir deploy multi-ambiente
         - Ambiente dev o mais próximo possível de prod.
         - Dev: Dimensão menor de recursos, algumas features de resiliência e disponibilidade desabilitadas por billing 
             - exemplo: **Prod** RDS com DR multi-az **Dev** RDS apenas com backup.
-- Usar pipeline para deployar infra.
-    - Github Actions
+- **Usar pipeline para deployar infra.**
+    - **Github Actions**
+    - **Usar gitflow**
 - Prover um ambiente base para receber laboratórios de kubernetes.
-- O laboratório deve estar documentado e ser replicável
-    - Dados sensíveis não devem estar no repositório, documentação deve apontar sua necessidade quando houver.
-
+- **O laboratório deve estar documentado.**
+    - Dados sensíveis não devem estar no repositório.
+- [Como rodar esse lab](./docs/replicar.md)
 
 ### Tecnologias usadas:
 
@@ -24,23 +31,20 @@
 ![Diagrama da Arquitetura em PRD](/docs/aws-prd-diagram-admin.png)
 
 ### Diagrama Organizations AWS
-- Ambientes baseados em multi-account usando aws organizations
 
 ![Diagrama Estrutura Organizations](./docs/aws-organizations-diagram.png)
 
-### Gitflow
+### Diagrama do Gitflow
 
 ![Diagrama gitflow](./docs/gitflow-diagram.png)
 
+### GITFLOW usado:
 - Main representando verdade do ambiente prod
-    - Usado branch protection
-    - implantação via pr com exigência de approve por revisor
+    - implantação via pr da dev/hotfix com exigência de approve por revisor
     - Apenas no laborátorio foi permitido self-revision, em ambiente real quem submete não aprova.
 - Dev representando a verdade do ambiente dev
-    - a partir da dev sai as branchs de desenvolvimento.
-
-
-
+    - Da dev sai as branchs de desenvolvimento.
+    - Deploy na dev apartir de PR
 
 ### Justificativas da abordagem: 
 
@@ -48,18 +52,33 @@
 <summary><strong>Github Actions</strong></summary>
 <br>
 
-- uso de environment
+- **Sequência Terraform**
+    - Comando: terraform fmt -recursive -check
+    - Comando: terraform validate
+    - Comando: terraform plan
+    - Comandos, buscam validar de forma automatizada o código terraform entregando um PR limpo para análise ao revisor. 
+    - Se um dos comandos falharem, não há necessidade de avaliar o plan.
+- **Uso de environment**
     - Facilita o gerenciamento e isolamento de ambientes
     - Permite o uso de váriaveis especificas para o ambiente, isso facilita o reaproveitamento de workflows que fazem a mesma coisa para ambientes diferentes.
     - Permite proteger as branchs, ou seja, **somente a branch que representa aquele ambiente implanta recursos**, além de regras mais refinadas.
     - Obrigar o codereview antes de um apply, desde approve simples, até refinados como codeOwner, impedir self-review, impedir admin-bypass.
-- Uso de workflow_call
+- **Uso de workflow_call**
     - Permite reaproveitar um mesmo workflow em diversas lógicas, evitando repetição de código.
-- Uso de actions script 
-    - Para fazer um resumo do plan e colocar como evidência no pr para facilitar o Review
-    - Apontando no PR recursos que sofrerão alterações e dando enfase nos recursos sensíveis, exemplo banco de dados.
-- Uso de artifact
+    - O Workflow de plan é usado via cal por outros workflows
+- **Uso de actions script**
+    - Faz um resumo do terraform plan e coloca como evidência no PR para facilitar o Review
+    - Aponta no PR recursos que sofrerão alterações e dando enfase nos recursos sensíveis, exemplo banco de dados.
+- **Uso de artifact**
     - Para armazenar o plano completo, caso precise de um review mais cuidadoso
+- **Context**
+    - Essa variável armazena um contexto: é PR : true or false
+    - Se for PR o contexto para environment é a branch que recebe o PR
+    - Se não for PR o contexto é o default.
+- **Concurrency**
+    - Evita que pipeline rodem juntas buscando o mesmo remotestate, embora a pipeline quebre por causa do state lock
+    - O uso de concurrency permite o que a pipeline aguarde liberação do state além de uma proteção extra a apply simultâneo.
+
     
 </details>
 
@@ -135,10 +154,9 @@ aws eks list-associated-access-policies --cluster-name <NomeCluster> --principal
 - [AWS - EKS](https://docs.aws.amazon.com/eks/latest/best-practices/introduction.html)
 - [Instâncias RDS ](https://aws.amazon.com/pt/rds/instance-types/)
 
-### Necessário criar policys para EKS controlar seus nós
-- Necessário criar a acces-entry para o admin do cluster
 
-- Estrutura de diretórios Terraform
+
+### Estrutura de diretórios Terraform
 ```bash
 .
 ├── modules

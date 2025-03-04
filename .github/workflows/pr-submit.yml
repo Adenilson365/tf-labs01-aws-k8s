@@ -10,10 +10,17 @@ on:
       - 'README.md'
       - 'LICENSE'
       - 'CONTRIBUTING.md' 
+env:
+  context: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
+concurrency:
+  group: terraform-${{vars.ENV_DEPLOY}}
+  cancel-in-progress: false
 jobs:
     tf_plan:
         uses: Adenilson365/tf-labs01-aws-k8s/.github/workflows/terraform-plan.yml@main
         secrets: inherit
+        with: 
+          conext: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
     pr_submit:
         needs: tf_plan
         runs-on: ubuntu-latest
@@ -27,7 +34,7 @@ jobs:
             - name: Download Plan
               uses: actions/download-artifact@v4
               with:
-                name: tfplan-${{ github.ref_name == 'main' && 'prod' || 'dev' }}
+                name: tfplan-${{ env.context == 'main' && 'prod' || env.context == 'dev' && 'dev' || 'feat' }}
             
             - name: Verificar Plan
               run: cat plan.txt 

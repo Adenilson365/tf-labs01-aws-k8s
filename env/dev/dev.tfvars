@@ -3,7 +3,7 @@ region      = "us-east-1"
 backend_key = "tf-state-dev"
 
 #vm vars
-vm_count      = 1
+vm_count      = 0
 instance_type = "t3.small"
 
 

@@ -66,3 +66,15 @@ variable "security_group_ids" {
   description = "The security group IDs to attach to the EKS cluster"
   type        = list(string)
 }
+
+variable "key_name" {
+  description = "The key name"
+  type        = string
+
+}
+
+variable "security_group_ids_to_nodegroup" {
+  description = "The security group IDs to attach to the EKS node group"
+  type        = list(string)
+
+}

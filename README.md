@@ -20,6 +20,7 @@ Este repositório contém um laboratório de Infraestrutura como Código (IaC) u
 - **O laboratório deve estar documentado.**
     - Dados sensíveis não devem estar no repositório.
 - [Como rodar esse lab](./docs/replicar.md)
+- [Outputs desse lab](./docs/outputs/outputs.md)
 
 ### Tecnologias usadas:
 

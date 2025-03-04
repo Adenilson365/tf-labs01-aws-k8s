@@ -5,6 +5,9 @@ on:
       conext:
         required: true
         type: string
+concurrency:
+  group: terraform-${{vars.ENV_DEPLOY}}
+  cancel-in-progress: false
 jobs:
   terraform_plan: 
     name: Terraform plan ${{ inputs.conext == 'main' && 'prod' || inputs.conext == 'dev' && 'dev' || 'feat' }}
@@ -16,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         
       - name: verifica o ref_name
-        run: echo ${{ inputs.conext }}"
+        run: echo "${{ inputs.conext }}"
 
       
       - name: Configurar AWS credentials CLI de Deploy

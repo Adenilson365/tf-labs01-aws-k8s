@@ -12,9 +12,6 @@ on:
       - 'README.md'
       - 'LICENSE'
       - 'CONTRIBUTING.md' 
-concurrency:
-  group: terraform-${{vars.ENV_DEPLOY}}
-  cancel-in-progress: false
 jobs:
   terraform_apply: 
     name: Terraform apply ${{ github.ref_name == 'main' && 'prod' || 'dev' }}

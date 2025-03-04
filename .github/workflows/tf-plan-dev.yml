@@ -15,9 +15,7 @@ on:
 
 env:
   context: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
-concurrency:
-  group: terraform-${{vars.ENV_DEPLOY}}
-  cancel-in-progress: false
+
 jobs:
     tf_plan:
         uses: Adenilson365/tf-labs01-aws-k8s/.github/workflows/terraform-plan.yml@main

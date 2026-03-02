@@ -23,7 +23,7 @@ skip_final_snapshot     = true
 
 #EKS vars
 node_group_name = "eks-node-group"
-instance_types  = ["t2.micro"]
+instance_types  = ["t3.small"]
 desired_size    = 2
 max_size        = 15
 min_size        = 2

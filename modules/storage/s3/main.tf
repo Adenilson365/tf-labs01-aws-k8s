@@ -49,6 +49,7 @@ resource "aws_s3_bucket_acl" "acl" {
 }
 
 locals {
+  # adiciona uma barra no final de cada caminho, se não tiver.
   paths_normalized = [
     for path in var.paths : (
         substr(path, length(path) - 1, 1 ) == "/" ? path : "${path}/"

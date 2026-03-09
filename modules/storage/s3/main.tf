@@ -1,9 +1,9 @@
-resource aws_s3_bucket "bucket" {
+resource "aws_s3_bucket" "bucket" {
   bucket = var.bucket_name
-  tags = var.default_tags
+  tags   = var.default_tags
 }
 
-resource aws_s3_bucket_versioning "versioning" {
+resource "aws_s3_bucket_versioning" "versioning" {
   bucket = aws_s3_bucket.bucket.id
 
   versioning_configuration {
@@ -11,7 +11,7 @@ resource aws_s3_bucket_versioning "versioning" {
   }
 }
 
-resource aws_s3_bucket_server_side_encryption_configuration "encryption" {
+resource "aws_s3_bucket_server_side_encryption_configuration" "encryption" {
   bucket = aws_s3_bucket.bucket.id
 
   rule {
@@ -21,7 +21,7 @@ resource aws_s3_bucket_server_side_encryption_configuration "encryption" {
   }
 }
 
-resource aws_s3_bucket_public_access_block "public_access_block" {
+resource "aws_s3_bucket_public_access_block" "public_access_block" {
   bucket = aws_s3_bucket.bucket.id
 
   block_public_acls       = var.block_public_acls
@@ -30,7 +30,7 @@ resource aws_s3_bucket_public_access_block "public_access_block" {
   restrict_public_buckets = var.restrict_public_buckets
 }
 
-resource aws_s3_bucket_ownership_controls "ownership_controls" {
+resource "aws_s3_bucket_ownership_controls" "ownership_controls" {
   bucket = aws_s3_bucket.bucket.id
 
   rule {
@@ -41,10 +41,10 @@ resource aws_s3_bucket_ownership_controls "ownership_controls" {
 resource "aws_s3_bucket_acl" "acl" {
   bucket = aws_s3_bucket.bucket.id
   acl    = var.acl
-  
+
   depends_on = [
-    aws_s3_bucket_public_access_block.public_access_block, 
-    aws_s3_bucket_ownership_controls.ownership_controls 
+    aws_s3_bucket_public_access_block.public_access_block,
+    aws_s3_bucket_ownership_controls.ownership_controls
   ]
 }
 
@@ -52,13 +52,13 @@ locals {
   # adiciona uma barra no final de cada caminho, se não tiver.
   paths_normalized = [
     for path in var.paths : (
-        substr(path, length(path) - 1, 1 ) == "/" ? path : "${path}/"
+      substr(path, length(path) - 1, 1) == "/" ? path : "${path}/"
     )
   ]
 }
 resource "aws_s3_object" "path" {
-  bucket  = aws_s3_bucket.bucket.id
-  key     = each.value
+  bucket   = aws_s3_bucket.bucket.id
+  key      = each.value
   for_each = toset(local.paths_normalized)
 
 }

@@ -33,30 +33,30 @@ variable "object_ownership" {
 
 variable "block_public_acls" {
   description = "Whether to block public ACLs on the S3 bucket"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "block_public_policy" {
   description = "Whether to block public bucket policies on the S3 bucket"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "ignore_public_acls" {
   description = "Whether to ignore public ACLs on the S3 bucket"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "restrict_public_buckets" {
   description = "Whether to restrict public bucket policies on the S3 bucket"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "paths" {
-  type = list(string)
-  default = []
+  type        = list(string)
+  default     = []
   description = "List of paths to create in the S3 bucket, subdirectories should be separated by a slash (e.g., 'folder1/folder2/')"
 }
